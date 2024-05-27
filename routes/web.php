@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CouponController;
 
 /*
    |--------------------------------------------------------------------------
@@ -103,9 +104,9 @@ Route::middleware(['permission:deleted-coupon,coupon.delete.list'])->group(funct
     Route::get('/coupons/deleted', [App\Http\Controllers\CouponController::class, 'deletedIndex'])->name('coupons.deleted.index');
 });
 
-Route::middleware(['permission:coupon,coupon.' . ((str_contains($_SERVER['REQUEST_URI'], 'save/')) ? ((explode("save/", $_SERVER['REQUEST_URI'])[1]) == 0 ? "create" : "edit") : $_SERVER['REQUEST_URI'])])->group(function () {
+Route::middleware(['permission:coupon,coupon.' . ((str_contains(request()->getRequestUri(), 'save/')) ? ((explode("save/", request()->getRequestUri())[1]) == 0 ? "create" : "edit") : request()->getRequestUri())])->group(function () {
 
-    Route::get('/coupons/save/{id}', [App\Http\Controllers\CouponController::class, 'save'])->name('coupons.save');
+    Route::get('/coupons/save/{id}', [CouponController::class, 'save'])->name('coupons.save');
 });
 
 Route::middleware(['permission:currency,currency.list'])->group(function () {
@@ -143,7 +144,7 @@ Route::middleware(['permission:deleted-documents,document.deleted'])->group(func
 
     Route::get('/documents/deleted', [App\Http\Controllers\DocumentsController::class, 'deletedIndex'])->name('documents.deleted');
 });
-Route::middleware(['permission:documents,document.' . ((str_contains($_SERVER['REQUEST_URI'], 'save/')) ? ((explode("save/", $_SERVER['REQUEST_URI'])[1]) == 0 ? "create" : "edit") : $_SERVER['REQUEST_URI'])])->group(function () {
+Route::middleware(['permission:documents,document.' . ((str_contains(request()->getRequestUri(), 'save/')) ? ((explode("save/", request()->getRequestUri())[1]) == 0 ? "create" : "edit") : request()->getRequestUri())])->group(function () {
 
     Route::get('/documents/save/{id}', [App\Http\Controllers\DocumentsController::class, 'save'])->name('documents.save');
 });
@@ -182,11 +183,11 @@ Route::middleware(['permission:deleted-banner,banner.delete.list'])->group(funct
 
     Route::get('/banners/deleted', [App\Http\Controllers\BannerController::class, 'deletedIndex'])->name('banners.deleted.index');
 });
-Route::middleware(['permission:banners,banners.' . ((str_contains($_SERVER['REQUEST_URI'], 'save/')) ? ((explode("save/", $_SERVER['REQUEST_URI'])[1]) == 0 ? "create" : "edit") : $_SERVER['REQUEST_URI'])])->group(function () {
+Route::middleware(['permission:banners,banners.' . ((str_contains(request()->getRequestUri(), 'save/')) ? ((explode("save/", request()->getRequestUri())[1]) == 0 ? "create" : "edit") : request()->getRequestUri())])->group(function () {
 
     Route::get('/banners/save/{id}', [App\Http\Controllers\BannerController::class, 'save'])->name('banners.save');
 });
-Route::middleware(['permission:reports,' . ((str_contains($_SERVER['REQUEST_URI'], 'reports/')) ? explode("reports/", $_SERVER['REQUEST_URI'])[1] : $_SERVER['REQUEST_URI']) . '.report'])->group(function () {
+Route::middleware(['permission:reports,' . ((str_contains(request()->getRequestUri(), 'reports/')) ? explode("reports/", request()->getRequestUri())[1] : request()->getRequestUri()) . '.report'])->group(function () {
 
     Route::get('/reports/{type}', [App\Http\Controllers\ReportController::class, 'reportGenerate'])->name('reports');
 });
@@ -212,7 +213,7 @@ Route::middleware(['permission:deleted-driver-rules,rule.delete.list'])->group(f
 
     Route::get('/driver-rules/deleted', [App\Http\Controllers\DriverController::class, 'deletedRulesIndex'])->name('driver-rules.deleted.index');
 });
-Route::middleware(['permission:driver-rules,rule.' . ((str_contains($_SERVER['REQUEST_URI'], 'save/')) ? ((explode("save/", $_SERVER['REQUEST_URI'])[1]) == 0 ? "create" : "edit") : $_SERVER['REQUEST_URI'])])->group(function () {
+Route::middleware(['permission:driver-rules,rule.' . ((str_contains(request()->getRequestUri(), 'save/')) ? ((explode("save/", request()->getRequestUri())[1]) == 0 ? "create" : "edit") : request()->getRequestUri())])->group(function () {
 
     Route::get('/driver-rules/save/{id}', [App\Http\Controllers\DriverController::class, 'saveRule'])->name('driver-rules.save');
 });
@@ -243,7 +244,7 @@ Route::middleware(['permission:faq,faq.list'])->group(function () {
 
     Route::get('/faq', [App\Http\Controllers\FAQController::class, 'index'])->name('faq');
 });
-Route::middleware(['permission:faq,faq.' . ((str_contains($_SERVER['REQUEST_URI'], 'save')) ? (explode("save", $_SERVER['REQUEST_URI'])[1] ? "edit" : "create") : $_SERVER['REQUEST_URI'])])->group(function () {
+Route::middleware(['permission:faq,faq.' . ((str_contains(request()->getRequestUri(), 'save')) ? (explode("save", request()->getRequestUri())[1] ? "edit" : "create") : request()->getRequestUri())])->group(function () {
 
     Route::get('/faq/save/{id?}', [App\Http\Controllers\FAQController::class, 'save'])->name('faq.save');
 });
@@ -310,7 +311,7 @@ Route::prefix('settings')->group(function () {
 
         Route::get('/languages', [App\Http\Controllers\SettingsController::class, 'languages'])->name('settings.languages');
     });
-    Route::middleware(['permission:language,language.' . ((str_contains($_SERVER['REQUEST_URI'], 'save')) ? (explode("save", $_SERVER['REQUEST_URI'])[1] ? "edit" : "create") : $_SERVER['REQUEST_URI'])])->group(function () {
+    Route::middleware(['permission:language,language.' . ((str_contains(request()->getRequestUri(), 'save')) ? (explode("save", request()->getRequestUri())[1] ? "edit" : "create") : request()->getRequestUri())])->group(function () {
 
 
         Route::get('/languages/save/{id?}', [App\Http\Controllers\SettingsController::class, 'saveLanguage'])->name('settings.languages.save');
@@ -332,7 +333,7 @@ Route::middleware(['permission:freight,freight.list'])->group(function () {
     Route::get('/freight-vehicles', [App\Http\Controllers\FreightVehicleController::class, 'index'])->name('freight-vehicle');
 });
 
-Route::middleware(['permission:freight,freight.' . ((str_contains($_SERVER['REQUEST_URI'], 'save')) ? (explode("save", $_SERVER['REQUEST_URI'])[1] ? "edit" : "create") : $_SERVER['REQUEST_URI'])])->group(function () {
+Route::middleware(['permission:freight,freight.' . ((str_contains(request()->getRequestUri(), 'save')) ? (explode("save", request()->getRequestUri())[1] ? "edit" : "create") : request()->getRequestUri())])->group(function () {
 
     Route::get('/freight-vehicles/save/{id?}', [App\Http\Controllers\FreightVehicleController::class, 'save'])->name('freight-vehicles.save');
 });
@@ -340,7 +341,7 @@ Route::middleware(['permission:airports,airports.list'])->group(function () {
 
     Route::get('/airports', [App\Http\Controllers\AirportsController::class, 'index'])->name('airports');
 });
-Route::middleware(['permission:airports,airports.' . ((str_contains($_SERVER['REQUEST_URI'], 'save')) ? (explode("save", $_SERVER['REQUEST_URI'])[1] ? "edit" : "create") : $_SERVER['REQUEST_URI'])])->group(function () {
+Route::middleware(['permission:airports,airports.' . ((str_contains(request()->getRequestUri(), 'save')) ? (explode("save", request()->getRequestUri())[1] ? "edit" : "create") : request()->getRequestUri())])->group(function () {
 
     Route::get('/airports/save/{id?}', [App\Http\Controllers\AirportsController::class, 'save'])->name('airport.save');
 });
